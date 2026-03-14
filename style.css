@@ -1,0 +1,70 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden; /* Prevents scrolling */
+    background-color: #1a1a1a;
+    font-family: system-ui, sans-serif;
+}
+
+/* 9x9 Grid Layout */
+.main-board {
+    display: grid;
+    grid-template-columns: repeat(9, 1fr);
+    grid-template-rows: repeat(9, 1fr);
+    height: 100vh;
+    width: 100vw;
+}
+
+.block {
+    border: 0.5px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #555;
+    font-size: 1.2rem;
+    transition: background 0.3s;
+}
+
+/* UI Overlay (Floating on top of grid) */
+.ui-overlay {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(255, 255, 255, 0.9);
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+#dice-img {
+    width: 60px;
+    height: 60px;
+    margin-bottom: 5px;
+}
+
+button {
+    padding: 12px 24px;
+    font-size: 1rem;
+    font-weight: bold;
+    color: white;
+    background: #e63946;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+button:active {
+    transform: scale(0.95);
+}

@@ -2,19 +2,21 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Roll Dice</title>
+    <title>Full Screen 9x9 Dice Roll</title>
     <link rel="stylesheet" href="style.css">
 </head>
-<body onload="createBoard()">
-    <div class="container">
-        <div class="main-board"></div>  
-        <div class="dice-container">
-            <img src="assets/dice1.png" id="dice-id"/>
-            <button onclick="roll()">Roll Dice</button>
+<body>
+    <div class="main-board" id="board"></div>  
+    
+    <div class="ui-overlay">
+        <div class="dice-display">
+            <img src="assets/dice1.png" id="dice-img" alt="dice">
+            <div id="roll-result">Roll to start!</div>
         </div>
+        <button onclick="roll()">Roll Dice</button>
     </div>
+
     <script src="main.js"></script>
 </body>
 </html>
