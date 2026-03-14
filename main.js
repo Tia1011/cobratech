@@ -321,22 +321,18 @@ function submitAnswer(q) {
         }, 1500);
     }
     
+    // Mark the cell with the result color (GREEN for correct, RED for wrong)
+    if (pendingQuestionCell) {
+        markCellColor(pendingQuestionCell, isCorrect);
+    }
+    
     updateFinanceDisplay();
     feedbackDiv.style.display = 'block';
     submitBtn.disabled = true;
     submitBtn.style.display = 'none';
     nextBtn.style.display = 'block';
     closeBtn.style.display = 'none';
-    
-    if (pendingQuestionCell) {
-        const cell = document.getElementById(`cell-${pendingQuestionCell}`);
-        if (cell) {
-            cell.style.borderColor = isCorrect ? '#28a745' : '#dc3545';
-            cell.style.borderWidth = '3px';
-        }
-    }
 }
-
 // --- Level Progression Functions ---
 function createLevels(questions, numLevels) {
     const categorized = {
@@ -467,11 +463,11 @@ function startNextLevel() {
     currentLevelQuestions = levels[currentLevel];
     questionAnswered = false;
     
-    // Reset board visuals
+    // Reset board visuals but KEEP the color-coded cells
     document.querySelectorAll('.block').forEach(b => {
-        b.classList.remove('visited', 'player-here');
-        b.style.borderColor = '';
-        b.style.borderWidth = '';
+        b.classList.remove('player-here');
+        // Don't remove 'correct-answer', 'wrong-answer', or 'visited' classes
+        // This preserves the colors from previous levels
     });
     
     // Update level display
@@ -488,7 +484,6 @@ function startNextLevel() {
     rollButton.style.opacity = '1';
     rollButton.style.cursor = 'pointer';
 }
-
 // --- 5. CSV & Data Logic ---
 async function loadCSV(filePath) {
     const response = await fetch(filePath);
@@ -517,7 +512,7 @@ function shuffle(array) {
 
 function resetGame() {
     document.querySelectorAll('.block').forEach(b => {
-        b.classList.remove('player-here', 'visited');
+        b.classList.remove('player-here', 'visited', 'correct-answer', 'wrong-answer');
         b.style.borderColor = '';
         b.style.borderWidth = '';
     });
@@ -546,7 +541,17 @@ function updateFinanceDisplay() {
     document.getElementById('liabilityValue').textContent = liabilities;
     document.getElementById('netWorthValue').textContent = netWorth;
 }
-
+function markCellColor(cellValue, isCorrect) {
+    const cell = document.getElementById(`cell-${cellValue}`);
+    if (cell) {
+        // Remove any existing result classes
+        cell.classList.remove('correct-answer', 'wrong-answer');
+        // Add the appropriate class
+        cell.classList.add(isCorrect ? 'correct-answer' : 'wrong-answer');
+        // Keep the visited class
+        cell.classList.add('visited');
+    }
+}
 // --- 6. Initialization ---
 async function initGame() {
     try {
