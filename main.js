@@ -4,7 +4,9 @@ const totalCells = gridSize * gridSize;
 let playerPosition = 0;
 let level1Questions = [];
 let currentQuestionIndex = -1;
-let score = 0;
+let assets = 1600;       // Money / savings earned
+let liabilities = 0;  // Debt or penalties
+let netWorth = 0;     // Calculated automatically
 let selectedAnswer = null;
 let questionAnswered = false;
 let currentQuestionData = null;
@@ -103,7 +105,7 @@ function movePlayer(steps) {
         playerPosition = totalCells;
         updateCellVisuals(playerPosition);
         setTimeout(() => {
-            alert(`Congratulations! You've reached the END!\n\nFinal Score: ${score}/${totalCells-1}`);
+            alert(`Congratulations! You've reached the END!\n\nFinal Score: ${assets}/${totalCells-1}`);
             resetGame();
         }, 400);
     } else {
@@ -168,7 +170,9 @@ function createModal() {
     if (!document.querySelector('.score-display')) {
         const scoreHTML = `
             <div class="score-display">
-                Score: <span class="score-value" id="scoreValue">0</span>
+                Assets: $<span id="assetValue">1600</span> |
+                Liabilities: $<span id="liabilityValue">0</span> |
+                Net Worth: $<span id="netWorthValue">0</span>
             </div>
         `;
         document.body.insertAdjacentHTML('beforeend', scoreHTML);
@@ -316,14 +320,19 @@ function submitAnswer(q) {
     
     // Show feedback
     if (isCorrect) {
-        score++;
-        document.getElementById('scoreValue').textContent = score;
-        feedbackDiv.textContent = '✅ Correct! Well done!';
-        feedbackDiv.className = 'feedback-message feedback-correct';
+        // Correct answer: gain assets
+        let earned = 100; // or vary based on difficulty
+        assets += earned;
+        feedbackDiv.textContent = `✅ Correct! You earned $${earned} in assets.`;
     } else {
-        feedbackDiv.textContent = `❌ Wrong! The correct answer is ${q.CorrectAnswer}.`;
-        feedbackDiv.className = 'feedback-message feedback-wrong';
+        // Wrong answer: incur liability
+        let penalty = 100; // or vary based on difficulty
+        liabilities += penalty;
+        feedbackDiv.textContent = `❌ Wrong! You incurred $${penalty} in liabilities. Correct answer: ${q.CorrectAnswer}`;
     }
+
+    // Update net worth display
+    updateFinanceDisplay();
     
     feedbackDiv.style.display = 'block';
     submitBtn.disabled = true;
@@ -398,8 +407,10 @@ function resetGame() {
         b.style.borderWidth = '';
     });
     playerPosition = 0;
-    score = 0;
-    document.getElementById('scoreValue').textContent = '0';
+    assets = 1600;
+    liabilities = 0;
+    netWorth = 0;
+    updateFinanceDisplay();
     resultText.innerText = "Roll to start";
     questionAnswered = false;
     gameLocked = false;
@@ -422,6 +433,13 @@ async function initGame() {
         createBoard();
         createModal();
     }
+}
+
+function updateFinanceDisplay() {
+    netWorth = assets - liabilities;
+    document.getElementById('assetValue').textContent = assets;
+    document.getElementById('liabilityValue').textContent = liabilities;
+    document.getElementById('netWorthValue').textContent = netWorth;
 }
 
 // Start the game
